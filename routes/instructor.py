@@ -1,5 +1,5 @@
 from app import app
-from flask import render_template, request, session, redirect
+from flask import render_template, request, session, redirect,url_for
 from models.instructor import Instructor
 from dotenv import load_dotenv
 
@@ -29,8 +29,15 @@ def iniciarSesion():
     except Exception as error:
         mensaje=str(error) 
         
-    return render_template("frmIniciarSesion.html", mensaje=mensaje)  
+    return render_template("frminiciarSesion.html", mensaje=mensaje)  
 
+
+    # Lógica de autenticación (ejemplo básico)
+    if username == "admin" and password == "1234":
+        return redirect(url_for("home"))  # Redirige a la página principal
+    else:
+        mensaje = "Usuario o contraseña incorrectos"
+        return render_template("frminiciarSesion.html", mensaje=mensaje)
 
 @app.route("/instructor/", methods=['POST'])
 def addInstructor():
