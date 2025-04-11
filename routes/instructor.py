@@ -10,26 +10,34 @@ def inicio():
     return render_template("frmIniciarSesion.html")
 
 
-@app.route("/iniciarSesion/",  methods=['POST'])
+@app.route("/iniciarSesion/", methods=['POST'])
 def iniciarSesion():
     try:
-        mensaje=None
-        estado=False
-        datos= request.form
-        instructor = Instructor.objects(instructor=datos['instructor']).first()
+        mensaje = None
+        datos = request.form
+
+        # Validar que los datos requeridos estén presentes
+        if 'txtUser' not in datos or 'txtPassword' not in datos:
+            mensaje = "Debe ingresar usuario y contraseña"
+            return render_template("frmIniciarSesion.html", mensaje=mensaje)
+
+        # Buscar al instructor por el campo 'usuario'
+        instructor = Instructor.objects(usuario=datos['txtUser']).first()
         if instructor is None:
-            mensaje="instructor no existe"
+            mensaje = "El usuario no existe"
         else:
-            if instructor.password == datos['password']:
-                session["user"] = instructor.instructor
-                estado=True
-                mensaje="Bienvenido al sistema"
+            # Verificar si la contraseña es correcta
+            if instructor.password == datos['txtPassword']:
+                session["user"] = instructor.usuario  # Guardar el usuario en la sesión
+                mensaje = "Bienvenido al sistema"
+                return redirect("/home/")  # Redirigir al home si el inicio de sesión es exitoso
             else:
-                mensaje="Contraseña incorrecta" 
+                mensaje = "Contraseña incorrecta"
     except Exception as error:
-        mensaje=str(error) 
-        
-    return render_template("frmIniciarSesion.html", mensaje=mensaje)  
+        mensaje = f"Error inesperado: {error}"
+
+    # Renderizar el formulario con el mensaje de error
+    return render_template("frmIniciarSesion.html", mensaje=mensaje)
 
 
 @app.route("/instructor/", methods=['POST'])
