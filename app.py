@@ -16,8 +16,7 @@ CORS(app)
 app.config["UPLOAD_FOLDER"] = "./static/imagenes"
 app.config['MONGODB_SETTINGS'] = [{
     "db": "GestionGuias",
-    "host": "localhost",  # Conexión local
-    "port": 27017
+    'host': os.environ.get("URI"),
 }]
 
 # Crear objeto de tipo MongoEngine

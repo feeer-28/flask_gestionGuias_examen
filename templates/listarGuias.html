@@ -16,26 +16,31 @@
                 </tr>
             </thead>
             <tbody>
-                {% for guia in guias %}
-                <tr>
-                    <td>{{ guia.nombre }}</td>
-                    <td>{{ guia.descripcion }}</td>
-                    <td>{{ guia.programa }}</td>
-                    <td>{{ guia.instructor.nombre }}</td>
-                    <td>{{ guia.instructor.regional.nombre }}</td>
-                    <td>{{ guia.fecha.strftime('%Y-%m-%d %H:%M') }}</td>
-                    <td class="text-center">
-                        <a href="{{ url_for('static', filename='uploads/' + guia.archivo) }}" target="_blank">
-                            <i class="fa fa-file-pdf fa-2x text-danger"></i>
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
+                {% if guias %}
+                    {% for guia in guias %}
+                    <tr>
+                        <td>{{ guia.nombre }}</td>
+                        <td>{{ guia.descripcion }}</td>
+                        <td>{{ guia.programa }}</td>
+                        <td>{{ guia.instructor.nombres if guia.instructor else "Sin instructor" }}</td>
+                        <td>{{ guia.instructor.regional.nombre if guia.instructor and guia.instructor.regional else "Sin regional" }}</td>
+                        <td>{{ guia.fecha.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td class="text-center">
+                            <a href="{{ url_for('static', filename='uploads/' + guia.archivo) }}" target="_blank">
+                                <i class="fa fa-file-pdf fa-2x text-danger" alt="Abrir documento PDF"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center">No hay guías disponibles</td>
+                    </tr>
+                {% endif %}
             </tbody>
         </table>
     </div>
 </div>
-
 {% endblock %}
 
 {% block piePagina %} 

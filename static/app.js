@@ -152,3 +152,21 @@ function agregarInstructor() {
         swal.fire("Add Instructor", mensaje, "warning");
     }
 }
+
+function mostrarGuiasTabla() {
+    let datos = "";
+
+    guias.forEach((guia) => {
+        datos += "<tr>";
+        datos += "<td>" + guia.nombre + "</td>";
+        datos += "<td>" + guia.descripcion + "</td>";
+        datos += "<td>" + guia.programa + "</td>";
+        datos += "<td>" + (guia.instructor ? guia.instructor.nombres : "Sin instructor") + "</td>";
+        datos += "<td>" + (guia.instructor && guia.instructor.regional ? guia.instructor.regional.nombre : "Sin regional") + "</td>";
+        datos += "<td>" + new Date(guia.fecha).toLocaleString() + "</td>";
+        datos += "<td class='text-center'><a href='/static/uploads/" + guia.archivo + "' target='_blank'><i class='fa fa-file-pdf fa-2x text-danger'></i></a></td>";
+        datos += "</tr>";
+    });
+
+    document.getElementById("listarGuias").innerHTML = datos;
+}

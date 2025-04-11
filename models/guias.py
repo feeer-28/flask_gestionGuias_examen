@@ -1,14 +1,13 @@
 from mongoengine import *
 from models.instructor import Instructor
 
-# Crear clase que representa la colección Genero en la base de datos
 class Guias(Document):
-    nombre = StringField(max_length=50, unique=True,required=True)
+    nombre = StringField(max_length=50, required=True, unique=True)
     descripcion = StringField(max_length=200, required=True)
-    programa_formacion = StringField(max_length=50, required=True)
-    documento_pdf = FileField(required=True)
+    programa = StringField(max_length=50, required=True)
+    archivo = StringField(required=True)  # Ruta del archivo PDF
     fecha = DateTimeField(required=True)
-    instructor = ReferenceField(Instructor,required=True)
-    def __repr__(self):
-        return self.nombre
+    instructor = ReferenceField(Instructor, required=True)  # Relación con Instructor
 
+    def __repr__(self):
+        return f"{self.nombre} - {self.programa}"
