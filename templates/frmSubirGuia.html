@@ -1,0 +1,56 @@
+{% extends "index.html" %}
+{% block contenido %} 
+<div class="subirGuia w-50 bg-body-secondary mt-3 p-4 rounded" style="margin: 0 auto">
+    <h3 class="text-center fw-bold mb-4">SUBIR GUÍA DE APRENDIZAJE</h3>
+    <form action="/subirGuia/" method="post" enctype="multipart/form-data" class="w-75" style="margin: 0 auto">
+        
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" name="nombre_guia" id="nombre_guia" placeholder="Nombre de la Guía" required>
+            <label for="nombre_guia">Nombre de la Guía</label>
+        </div>
+        
+        <div class="form-floating mb-3">
+            <textarea class="form-control" name="descripcion" id="descripcion" placeholder="Descripción" style="height: 100px" required></textarea>
+            <label for="descripcion">Descripción</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <select class="form-select" name="programa" id="programa" required>
+                <option value="" disabled selected>Seleccione un Programa de Formación</option>
+                {% for prog in programas %}
+                    <option value="{{ prog.nombre }}">{{ prog.nombre }}</option>
+                {% endfor %}
+            </select>
+            <label for="programa">Programa de Formación</label>
+        </div>
+
+        <div class="mb-3">
+            <label for="archivo" class="form-label">Documento PDF</label>
+            <input class="form-control" type="file" name="archivo" id="archivo" accept="application/pdf" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Instructor:</label>
+            <input type="text" class="form-control" value="{{ session['nombre'] }}" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Fecha y Hora:</label>
+            <input type="text" class="form-control" value="{{ fecha_actual }}" readonly>
+        </div>
+
+        <button type="submit" class="btn btn-success">Subir Guía</button>
+        <a href="/" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+
+{% if mensaje %}   
+    <script>
+        Swal.fire("Guía de Aprendizaje", "{{ mensaje }}", "info");
+    </script>
+{% endif %}
+{% endblock %}
+
+{% block piePagina %} 
+    {% include "piePagina.html" %}
+{% endblock %}

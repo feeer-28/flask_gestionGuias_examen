@@ -1,0 +1,37 @@
+{% extends "index.html" %}
+{% block contenido %} 
+<div class="registrarse w-50 bg-body-secondary mt-3 p-4 rounded" style="margin: 0 auto">
+    <h3 class="text-center fw-bold mb-4">REGISTRO DE INSTRUCTOR</h3>
+    <form action="/registrarse/" method="post" class="w-75" style="margin: 0 auto">
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" name="nombre" id="nombre" placeholder="Nombre completo" required>
+            <label for="nombre">Nombre Completo</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="email" class="form-control" name="correo" id="correo" placeholder="Correo electrónico" required>
+            <label for="correo">Correo Electrónico</label>
+        </div>
+        <div class="form-floating mb-3">
+            <select class="form-select" name="regional" id="regional" required>
+                <option value="" disabled selected>Seleccione una Regional</option>
+                {% for reg in regionales %}
+                    <option value="{{ reg.id }}">{{ reg.nombre }}</option>
+                {% endfor %}
+            </select>
+            <label for="regional">Regional</label>
+        </div>
+        <button type="submit" class="btn btn-success">Registrarse</button>
+        <a href="/" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+
+{% if mensaje %}   
+    <script>
+        Swal.fire("Registro", "{{ mensaje }}", "info");
+    </script>
+{% endif %}
+{% endblock %}
+
+{% block piePagina %} 
+    {% include "piePagina.html" %}
+{% endblock %}
