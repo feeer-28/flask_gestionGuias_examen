@@ -1,16 +1,22 @@
+
 {% extends "index.html" %}
 {% block contenido %} 
 <div class="registrarse w-50 bg-body-secondary mt-3 p-4 rounded" style="margin: 0 auto">
     <h3 class="text-center fw-bold mb-4">REGISTRO DE INSTRUCTOR</h3>
     <form action="/registrarse/" method="post" class="w-75" style="margin: 0 auto">
+        <!-- Campo para Nombres -->
         <div class="form-floating mb-3">
-            <input type="text" class="form-control" name="nombre" id="nombre" placeholder="Nombre completo" required>
-            <label for="nombre">Nombre Completo</label>
+            <input type="text" class="form-control" name="nombres" id="nombres" placeholder="Nombre completo" required>
+            <label for="nombres">Nombre Completo</label>
         </div>
+        
+        <!-- Campo para Correo -->
         <div class="form-floating mb-3">
             <input type="email" class="form-control" name="correo" id="correo" placeholder="Correo electrónico" required>
             <label for="correo">Correo Electrónico</label>
         </div>
+        
+        <!-- Campo para Regional -->
         <div class="form-floating mb-3">
             <select class="form-select" name="regional" id="regional" required>
                 <option value="" disabled selected>Seleccione una Regional</option>
@@ -20,11 +26,28 @@
             </select>
             <label for="regional">Regional</label>
         </div>
-        <button type="submit" class="btn btn-success">Registrarse</button>
-        <a href="/" class="btn btn-secondary">Cancelar</a>
+        
+        <!-- Campo para Usuario -->
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" name="usuario" id="usuario" placeholder="Usuario" required>
+            <label for="usuario">Usuario</label>
+        </div>
+        
+        <!-- Campo para Contraseña -->
+        <div class="form-floating mb-3">
+            <input type="password" class="form-control" name="password" id="password" placeholder="Contraseña" required>
+            <label for="password">Contraseña</label>
+        </div>
+        
+        <!-- Botones Aceptar y Cancelar -->
+        <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-success">Aceptar</button>
+            <a href="/" class="btn btn-secondary">Cancelar</a>
+        </div>
     </form>
 </div>
 
+<!-- Mensaje de alerta -->
 {% if mensaje %}   
     <script>
         Swal.fire("Registro", "{{ mensaje }}", "info");
