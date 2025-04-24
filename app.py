@@ -5,10 +5,11 @@ from dotenv import load_dotenv
 from mongoengine.connection import get_connection  # <- Importación clave
 import os
 
+
 # Cargar variables de entorno
 load_dotenv()
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=os.path.join(os.getcwd(), 'templates'))
 app.secret_key = os.getenv("SECRET_KEY", "1234567890aeiou")
 CORS(app)
 
