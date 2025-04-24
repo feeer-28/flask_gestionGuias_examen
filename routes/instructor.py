@@ -93,11 +93,18 @@ def registrarse():
                 regionales = Regional.objects()
                 return render_template("frmRegistrarse.html", mensaje=mensaje, regionales=regionales)
 
+            # Asegurarse de que la regional seleccionada sea válida
+            regional = Regional.objects(id=datos['regional']).first()  # Buscar la regional por ID
+            if regional is None:
+                mensaje = "Regional no encontrada"
+                regionales = Regional.objects()
+                return render_template("frmRegistrarse.html", mensaje=mensaje, regionales=regionales)
+
             # Crear un nuevo instructor
             instructor = Instructor(
                 nombres=datos['nombres'],
                 correo=datos['correo'],
-                regional=datos['regional'],
+                regional=regional,  # Guardar la referencia a la región
                 usuario=datos['usuario'],
                 password=datos['password']
             )

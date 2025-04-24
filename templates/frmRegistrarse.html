@@ -1,4 +1,5 @@
 {% extends "index.html" %}
+
 {% block contenido %}
 <div class="registrarse w-50 bg-body-secondary mt-3 p-4 rounded" style="margin: 0 auto">
     <h3 class="text-center fw-bold mb-4">REGISTRO DE INSTRUCTOR</h3>
@@ -15,7 +16,7 @@
             <select class="form-select" name="regional" id="regional" required>
                 <option value="" disabled selected>Seleccione una Regional</option>
                 {% for reg in regionales %}
-                    <option value="{{ reg.nombre }}">{{ reg.nombre }}</option>
+                    <option value="{{ reg.id }}">{{ reg.nombre }}</option>
                 {% endfor %}
             </select>
             <label for="regional">Regional</label>
@@ -40,4 +41,5 @@
     Swal.fire("Registro", "{{ mensaje }}", "info");
 </script>
 {% endif %}
+
 {% endblock %}

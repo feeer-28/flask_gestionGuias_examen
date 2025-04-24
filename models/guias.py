@@ -1,13 +1,16 @@
 from mongoengine import *
-from models.instructor import Instructor
+from datetime import datetime
 
-class Guias(Document):
-    nombre = StringField(max_length=50, required=True, unique=True)
-    descripcion = StringField(max_length=200, required=True)
-    programa = StringField(max_length=50, required=True)
-    archivo = StringField(required=True)  # Ruta del archivo PDF
-    fecha = DateTimeField(required=True)
-    instructor = ReferenceField(Instructor, required=True)  # Relación con Instructor
+from app import db
+from models.instructor import Instructor  # si tienes referencia a Instructor
 
-    def __repr__(self):
-        return f"{self.nombre} - {self.programa}"
+
+class Guias(db.Document):
+    nombre = StringField(required=True)
+    descripcion = StringField(required=True)
+    programa = StringField(required=True)
+    archivo = StringField(required=True)  # Nombre del archivo
+    fecha = DateTimeField(default=datetime.now)
+    instructor = db.ReferenceField('Instructor', required=True)
+
+    meta = {'collection': 'guias'}

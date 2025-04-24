@@ -1,172 +1,118 @@
 let guias = [];
-let instructores = [];
 let mensaje = null;
 
-listarInstructores();
-listarGuias();
+// Inicialización al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    listarGuias();
+});
 
+// Validación de formulario
 function validarGuia() {
-    if (document.getElementById("txtCodigo").value == "") {
-        mensaje = "Debe ingresar código de la Guía";
+    const formulario = document.forms['formGuia'];
+    if (!formulario) return false;
+
+    if (formulario.nombre.value.trim() === "") {
+        mensaje = "Debe ingresar el nombre de la guía";
         return false;
-    } else if (document.getElementById("txtTitulo").value == "") {
-        mensaje = "Debe ingresar Título de la Guía";
-        return false;
-    } else if (document.getElementById("txtContenido").value == "") {
-        mensaje = "Debe ingresar el Contenido de la Guía";
-        return false;
-    } else {
-        return true;
     }
+    if (formulario.descripcion.value.trim() === "") {
+        mensaje = "Debe ingresar la descripción";
+        return false;
+    }
+    if (formulario.programa.value === "") {
+        mensaje = "Debe seleccionar un programa";
+        return false;
+    }
+    if (!formulario.archivo.files[0]) {
+        mensaje = "Debe seleccionar un archivo PDF";
+        return false;
+    }
+    return true;
 }
 
-function validarInstructor() {
-    if (document.getElementById("txtNombre").value == "") {
-        mensaje = "Debe ingresar el nombre del Instructor";
-        return false;
-    } else if (document.getElementById("txtCorreo").value == "") {
-        mensaje = "Debe ingresar el correo del Instructor";
-        return false;
-    } else {
-        return true;
-    }
-}
-
-function listarGuias() {
-    const url = "/guia/";
-    fetch(url, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-        },
-    })
-        .then((respuesta) => respuesta.json())
-        .then((resultado) => {
-            guias = resultado.guias;
-            console.log(guias);
+// Listar guías desde la API
+async function listarGuias() {
+    try {
+        const response = await fetch('/api/guias/');
+        const data = await response.json();
+        
+        if (data.estado) {
+            guias = data.guias;
             mostrarGuiasTabla();
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-}
-
-function listarInstructores() {
-    const url = "/instructor/";
-    fetch(url, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-        },
-    })
-        .then((respuesta) => respuesta.json())
-        .then((resultado) => {
-            instructores = resultado.instructores;
-            console.log(instructores);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-}
-
-function mostrarGuiasTabla() {
-    let datos = "";
-
-    guias.forEach((guia) => {
-        datos += "<tr>";
-        datos += "<td>" + guia.codigo + "</td>";
-        datos += "<td>" + guia.titulo + "</td>";
-        datos += "<td>" + guia.contenido + "</td>";
-        datos += "</tr>";
-    });
-    document.getElementById("datosGuias").innerHTML = datos;
-}
-
-/**
- * Función que se encarga de hacer
- * una petición al backend para
- * agregar una guía.
- */
-function agregarGuia() {
-    if (validarGuia()) {
-        const url = "/guia/";
-        const guia = {
-            codigo: document.getElementById("txtCodigo").value,
-            titulo: document.getElementById("txtTitulo").value,
-            contenido: document.getElementById("txtContenido").value,
-        };
-        fetch(url, {
-            method: "POST",
-            body: JSON.stringify(guia),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-            .then((respuesta) => respuesta.json())
-            .then((resultado) => {
-                if (resultado.estado) {
-                    location.href = "/guias/";
-                } else {
-                    swal.fire("Add Guía", resultado.mensaje, "warning");
-                }
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    } else {
-        swal.fire("Add Guía", mensaje, "warning");
+        } else {
+            mostrarError(data.mensaje);
+        }
+    } catch (error) {
+        mostrarError(`Error al cargar guías: ${error.message}`);
     }
 }
 
-/**
- * Función que se encarga de hacer
- * una petición al backend para
- * agregar un instructor.
- */
-function agregarInstructor() {
-    if (validarInstructor()) {
-        const instructor = {
-            nombre: document.getElementById("txtNombre").value,
-            correo: document.getElementById("txtCorreo").value,
-        };
-        const url = "/instructor/";
-        fetch(url, {
-            method: "POST",
-            body: JSON.stringify(instructor),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-            .then((respuesta) => respuesta.json())
-            .then((resultado) => {
-                if (resultado.estado) {
-                    location.href = "/instructores/";
-                } else {
-                    swal.fire("Add Instructor", resultado.mensaje, "warning");
-                }
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    } else {
-        swal.fire("Add Instructor", mensaje, "warning");
-    }
-}
-
+// Mostrar guías en la tabla
 function mostrarGuiasTabla() {
-    let datos = "";
+    const tbody = document.getElementById('guias-body');
+    if (!tbody) return;
 
-    guias.forEach((guia) => {
-        datos += "<tr>";
-        datos += "<td>" + guia.nombre + "</td>";
-        datos += "<td>" + guia.descripcion + "</td>";
-        datos += "<td>" + guia.programa + "</td>";
-        datos += "<td>" + (guia.instructor ? guia.instructor.nombres : "Sin instructor") + "</td>";
-        datos += "<td>" + (guia.instructor && guia.instructor.regional ? guia.instructor.regional.nombre : "Sin regional") + "</td>";
-        datos += "<td>" + new Date(guia.fecha).toLocaleString() + "</td>";
-        datos += "<td class='text-center'><a href='/static/uploads/" + guia.archivo + "' target='_blank'><i class='fa fa-file-pdf fa-2x text-danger'></i></a></td>";
-        datos += "</tr>";
+    let contenido = '';
+    
+    guias.forEach(guia => {
+        contenido += `
+        <tr>
+            <td>${guia.nombre}</td>
+            <td>${guia.descripcion}</td>
+            <td>${guia.programa}</td>
+            <td>${guia.instructor?.nombres || 'Sin instructor'}</td>
+            <td>${guia.instructor?.regional?.nombre || 'Sin regional'}</td>
+            <td>${new Date(guia.fecha).toLocaleDateString('es-CO', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            })}</td>
+            <td class="text-center">
+                <a href="/static/uploads/${guia.archivo}" 
+                   target="_blank" 
+                   class="btn btn-link">
+                    <i class="fas fa-file-pdf fa-2x text-danger"></i>
+                </a>
+            </td>
+        </tr>`;
     });
 
-    document.getElementById("listarGuias").innerHTML = datos;
+    tbody.innerHTML = contenido || `
+        <tr>
+            <td colspan="7" class="text-center">No hay guías registradas</td>
+        </tr>`;
+}
+
+// Manejar envío de formulario
+async function agregarGuia(event) {
+    event.preventDefault();
+
+    if (!validarGuia()) {
+        mostrarError(mensaje);
+        return;
+    }
+
+    const formulario = document.forms['formGuia'];
+    const formData = new FormData(formulario);
+
+    try {
+        const response = await fetch('/api/guias/', {
+            method: 'POST',
+            body: formData
+        });
+
+        const resultado = await response.json();
+        console.log("Respuesta del servidor:", resultado);
+
+        if (resultado.estado) {
+            mostrarExito(resultado.mensaje);
+            formulario.reset();
+            await listarGuias();
+        } else {
+            mostrarError(resultado.mensaje);
+        }
+    } catch (error) {
+        console.error("Error al subir la guía:", error);
+        mostrarError(`Error de conexión: ${error.message}`);
+    }
 }

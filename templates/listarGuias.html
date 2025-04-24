@@ -15,7 +15,7 @@
                     <th>Documento</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="guias-body">
                 {% if guias %}
                     {% for guia in guias %}
                     <tr>
@@ -27,7 +27,7 @@
                         <td>{{ guia.fecha.strftime('%Y-%m-%d %H:%M') }}</td>
                         <td class="text-center">
                             <a href="{{ url_for('static', filename='uploads/' + guia.archivo) }}" target="_blank">
-                                <i class="fa fa-file-pdf fa-2x text-danger" alt="Abrir documento PDF"></i>
+                                <i class="fas fa-file-pdf fa-2x text-danger"></i>
                             </a>
                         </td>
                     </tr>

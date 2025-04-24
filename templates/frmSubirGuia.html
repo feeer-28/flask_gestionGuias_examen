@@ -2,7 +2,7 @@
 {% block contenido %}
 <div class="container mt-4">
     <h3 class="text-center fw-bold mb-4">Subir Guía de Aprendizaje</h3>
-    <form action="/subirGuia/" method="POST" enctype="multipart/form-data">
+    <form name="formGuia" enctype="multipart/form-data" method="POST">
         <div class="mb-3">
             <label for="nombre" class="form-label">Nombre de la Guía</label>
             <input type="text" class="form-control" id="nombre" name="nombre" required>
@@ -14,6 +14,7 @@
         <div class="mb-3">
             <label for="programa" class="form-label">Programa de Formación</label>
             <select class="form-select" id="programa" name="programa" required>
+                <option value="">Seleccione un programa...</option>
                 <option value="Desarrollo de Software">Desarrollo de Software</option>
                 <option value="Multimedia">Multimedia</option>
                 <option value="Inteligencia Artificial">Inteligencia Artificial</option>
@@ -25,8 +26,16 @@
         <div class="mb-3">
             <label for="archivo" class="form-label">Documento PDF</label>
             <input type="file" class="form-control" id="archivo" name="archivo" accept="application/pdf" required>
+            <div class="form-text">Tamaño máximo: 10MB</div>
         </div>
         <button type="submit" class="btn btn-primary">Subir Guía</button>
     </form>
+    
 </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ url_for('static', filename='js/guias.js') }}"></script>
 {% endblock %}

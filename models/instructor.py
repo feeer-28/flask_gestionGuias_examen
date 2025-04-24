@@ -9,4 +9,4 @@ class Instructor(Document):
     correo = EmailField(required=True, unique=True)
 
     def __repr__(self):
-        return f"{self.nombres} ({self.regional.nombre})"
+        return f"{self.nombres} ({self.regional.nombre if self.regional else 'Sin regional'})"
