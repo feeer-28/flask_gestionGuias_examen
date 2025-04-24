@@ -8,7 +8,7 @@ load_dotenv()
 
 @app.route("/")
 def inicio():
-    return render_template("frmIniciarSesion.html")
+    return render_template("frminiciarSesion.html")
 
 
 @app.route("/iniciarSesion/", methods=['POST'])
@@ -20,7 +20,7 @@ def iniciarSesion():
         # Validar que los datos requeridos estén presentes
         if 'txtUser' not in datos or 'txtPassword' not in datos:
             mensaje = "Debe ingresar usuario y contraseña"
-            return render_template("frmIniciarSesion.html", mensaje=mensaje)
+            return render_template("frminiciarSesion.html", mensaje=mensaje)
 
         # Buscar al instructor por el campo 'usuario'
         instructor = Instructor.objects(usuario=datos['txtUser']).first()
@@ -38,7 +38,7 @@ def iniciarSesion():
         mensaje = f"Error inesperado: {error}"
 
     # Renderizar el formulario con el mensaje de error
-    return render_template("frmIniciarSesion.html", mensaje=mensaje)
+    return render_template("frminiciarSesion.html", mensaje=mensaje)
 
 
 
@@ -71,7 +71,7 @@ def home():
 def exit():
     session.clear()
     mensaje="Ha cerrado la sesión de forma"
-    return render_template("frmIniciarSesion.html",mensaje=mensaje)
+    return render_template("frminiciarSesion.html",mensaje=mensaje)
 
 @app.route("/registrarse/", methods=['GET', 'POST'])
 def registrarse():
@@ -112,7 +112,7 @@ def registrarse():
 
             # Redirigir al formulario de inicio de sesión con un mensaje de éxito
             mensaje = "Registro exitoso. Ahora puede iniciar sesión."
-            return render_template("frmIniciarSesion.html", mensaje=mensaje)
+            return render_template("frminiciarSesion.html", mensaje=mensaje)
 
     except Exception as error:
         mensaje = f"Error al registrar el instructor: {error}"
