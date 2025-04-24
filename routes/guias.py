@@ -124,4 +124,4 @@ def subir_guia():
         flash("Guía subida con éxito", "success")
         return redirect(url_for("listar_guias"))
 
-    return render_template("frmsubirGuia.html")
+    return render_template("frmSubirGuia.html")
