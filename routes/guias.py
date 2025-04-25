@@ -1,4 +1,4 @@
-from flask import request, jsonify, render_template, session, redirect, url_for, flash
+from flask import request, jsonify, render_template, session, redirect, url_for, flash, send_from_directory
 from werkzeug.utils import secure_filename
 from models.instructor import Instructor
 from models.guias import Guias
@@ -84,6 +84,11 @@ def listar_guias():
         print(f"Nombre del instructor: {nombre_instructor}")
         print(f"Regional del instructor: {regional_instructor}")
 
+    for guia in guias:
+        archivo_path = os.path.join(app.config['UPLOAD_FOLDER'], guia.archivo)
+        if not os.path.exists(archivo_path):
+            print(f"El archivo {archivo_path} no existe")
+
     # Renderizar la plantilla con las guías
     return render_template("listarGuias.html", guias=guias)
 
@@ -125,3 +130,15 @@ def subir_guia():
         return redirect(url_for("listar_guias"))
 
     return render_template("frmSubirGuia.html")
+
+
+@app.route("/descargar/<filename>")
+def descargar_archivo(filename):
+    try:
+        # Ruta completa de la carpeta donde están los archivos
+        uploads = os.path.join(app.root_path, app.config['UPLOAD_FOLDER'])
+        return send_from_directory(uploads, filename, as_attachment=True)
+    except FileNotFoundError:
+        flash("El archivo no existe", "danger")
+        return redirect(url_for("listar_guias"))
+

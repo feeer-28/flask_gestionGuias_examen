@@ -1,7 +1,17 @@
 {% extends "index.html" %}
+{% block menu %} 
+    {% include "menu.html" %}
+{% endblock %}
 {% block contenido %}
+<!-- Primero carga jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<!-- Luego DataTables CSS y JS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css" />
+<script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+
 <div class="container mt-4">
     <h3 class="text-center fw-bold mb-4">GUÍAS DE APRENDIZAJE</h3>
+    
     <div class="table-responsive">
         <table id="tablaGuias" class="table table-striped table-bordered">
             <thead class="table-dark text-center">
@@ -27,7 +37,7 @@
                         <td>{{ guia.fecha.strftime('%Y-%m-%d %H:%M') }}</td>
                         <td class="text-center">
                             <a href="{{ url_for('static', filename='uploads/' + guia.archivo) }}" target="_blank">
-                                <i class="fas fa-file-pdf fa-2x text-danger"></i>
+                                <i class="fa fa-file fa-2x text-danger"></i>
                             </a>
                         </td>
                     </tr>
@@ -41,6 +51,16 @@
         </table>
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        $('#tablaGuias').DataTable({
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+            }
+        });
+    });
+</script>
 {% endblock %}
 
 {% block piePagina %} 

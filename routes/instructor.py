@@ -3,8 +3,34 @@ from flask import render_template, request, session, redirect
 from models.instructor import Instructor
 from dotenv import load_dotenv
 from models.regional import Regional
+import os
+import yagmail  # Importar yagmail
 
 load_dotenv()
+
+def enviar_correo_registro(instructor, password):
+    try:
+        # Crear una instancia de yagmail
+        yag = yagmail.SMTP(os.environ.get('MAIL_USERNAME'), os.environ.get('MAIL_PASSWORD'))
+        
+        # Asunto y contenido del correo
+        subject = 'Bienvenido a la Plataforma de Guías de Aprendizaje SENA'
+        contents = f"""
+        <h2>Bienvenido {instructor.nombres}</h2>
+        <p>Tu registro en la plataforma de Guías de Aprendizaje del SENA ha sido exitoso.</p>
+        <p><strong>Tus credenciales de acceso son:</strong></p>
+        <ul>
+            <li>Correo: {instructor.correo}</li>
+            <li>Contraseña: {password}</li>
+        </ul>
+        <p>Te recomendamos cambiar tu contraseña después de iniciar sesión.</p>
+        """
+        
+        # Enviar el correo
+        yag.send(to=instructor.correo, subject=subject, contents=contents)
+        print("Correo enviado exitosamente.")
+    except Exception as e:
+        print(f"Error enviando correo: {str(e)}")
 
 @app.route("/")
 def inicio():
@@ -110,8 +136,14 @@ def registrarse():
             )
             instructor.save()
 
+            # Enviar correo de bienvenida
+            try:
+                enviar_correo_registro(instructor, datos['password'])
+                mensaje = "Registro exitoso. Se ha enviado un correo de bienvenida."
+            except Exception as e:
+                mensaje = f"Registro exitoso, pero ocurrió un error al enviar el correo: {e}"
+
             # Redirigir al formulario de inicio de sesión con un mensaje de éxito
-            mensaje = "Registro exitoso. Ahora puede iniciar sesión."
             return render_template("frminiciarSesion.html", mensaje=mensaje)
 
     except Exception as error:

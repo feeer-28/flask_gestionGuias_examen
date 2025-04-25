@@ -1,0 +1,15 @@
+{
+  "name": "flask_gestionguias_examen",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "datatables.net-dt": "^2.2.2"
+  }
+}
